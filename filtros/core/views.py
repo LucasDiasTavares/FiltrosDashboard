@@ -1,3 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def FiltroBoostrapView(request):
+    return render(request, 'core/bootstrap_form.html')
