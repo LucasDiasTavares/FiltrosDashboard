@@ -1,0 +1,116 @@
+python3 manage.py myCommand
+
+Utilizando o core do django eu consigo escrever meus proprios comandos
+que irá ser executado no mesmo nivel de python3 manage.py ...
+
+Neste exemplo irei criar um comando que irá popular a minha data base automaticamente.
+A razão por utilizar este metodo é que, assim eu posso usar dummy data sem perder
+muito tempo criando campo por campo e posso, 'mandar' o django ler um arquivo
+com todos os campos já prefeitos.
+
+Na minha app que eu quero criar o meu comando eu devo criar uma pasta chamada
+management e dentro dela outra chamada commands e dentro desta pasta você
+pode escrever o nome do arquivo que você quiser, mas lembre-se que o arquivo
+tem que ser terminado com .py para que o django entenda que está executando
+um script python. (Neste exemplo utilizei o nome de create_data.py).
+
+Dentro do create_data.py:
+- **Importar:** from django.core.management.base import BaseCommand
+- **Importar:** from core.models import Jornal, Categorias, Autor
+- **Importar:** import random
+- Depois é só criar uma class Command(BaseCommand):
+- Dentro da sua class Command, deve haver 2 metodos que são obrigatorios:
+-  def add_arguments(self, parser)
+-  **parser**: é onde que irá passar os argumentos.
+
+class Command(BaseCommand):
+
+    def add_arguments(self, parser):
+        parser.add_argument('file_name', type=str, help='Segue o arquivo que contem o nome dos titulos do meu jornal')
+
+    def handle(self, *args, **kwargs):
+        # pega o arquivo e salva nessa variavel
+        file_name = kwargs['file_name']
+        # abre o arquivo e salva em uma variavel chamada de file
+        with open(f'{file_name}.txt') as file:
+            # um loop normal que ira pegar cada linha do meu arquivo
+            # e colocar no meu model Jornal com o campo de titulo
+            # o que estiver escrito em cada linha
+            for row in file:
+                titulo = row
+                autor =
+                categorias =
+                data_publicada =
+                visualizacao =
+                revisado =
+
+Apos adicionar os campos dentro do meu loop, como eu tenho campos:
+- ForeignKey
+- ManyToManyField
+- DateTimeField
+- BooleanField
+- IntegerField
+
+O mais corrreto neste caso seria utilizar uma funçao do python chamada de random
+e popular os meus campos randomicamente, eu poderia muito bem utilizar essa forma
+para o titulo, pois é um **CharField**, porem como geralmente o titulo nao altera
+e os outros campos sim eu optei por essa forma. Alem de eu aprender mais uma coisa
+legal do Django.
+
+categorias = [
+    'Esporte',
+    'Lazer',
+    'Musica',
+    'Codificação',
+    'Viajem'
+]
+
+autores = [
+    'Adriana',
+    'Lucas',
+    'Milton',
+    'Ricardo',
+    'Bruno',
+    'Eliane',
+    'Suzana',
+    'Pablo'
+]
+
+- Aqui é uma função simples do python que irá geral randomicamente o nome dos autores
+e das categorias que eu especifiquei a cima.
+
+
+def genrar_autor():
+    index = random.randint(0,7)
+    return autores[index]
+
+
+def genrar_categorias():
+    index = random.randint(0,4)
+    return categorias[index]
+
+
+def genrar_visualizacao():
+    return random.randint(0, 100)
+
+
+def genrar_revisado():
+    revisado = random.randint(0, 1)
+    if revisado == 0:
+        return False
+    return True
+
+
+def gerar_dia_mes_ano():
+    # segue padrão americano
+    dia = random.randint(1, 28)
+    mes = random.randint(1, 12)
+    ano = random.randint(2000, 2030)
+    return datetime.date(ano, mes, dia)
+
+Depois de toda está parte feita, deve utilizar o comando:
+python3 manage.py create_data titulos
+Onde titulos é o arquivo titulos.txt
+
+
+AINDA NÃO CONSEGUI ENTENDER TUDO, ESTÁ BUGADO O SCRIPT SÓ TA MANDANDO UM TITULO POR VEZ...
